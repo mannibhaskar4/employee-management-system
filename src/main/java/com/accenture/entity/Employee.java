@@ -2,6 +2,7 @@ package com.accenture.entity;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -28,17 +29,19 @@ public class Employee {
     private Date doj;
 
     @Field(name = "salary")
-    @NotNull(message = "Entering invalid salary")
+    @Min(value = 10000,message = "invalid value")
     private double salary;
 
     @Field(name="enterpriseid")
     @NotNull(message = "Entering enterprise id")
+    @Indexed(unique = true)
     private String enterpriseid;
 
 
     //add validations
     @Field(name = "employeeid")
     @Min(value = 100001,message = "invalid value")
+    @Indexed(unique = true)
     private int employeeid;
 
     public Employee(String id, String name, Date dob, Date doj, double salary, String enterpriseid, int employeeid) {
