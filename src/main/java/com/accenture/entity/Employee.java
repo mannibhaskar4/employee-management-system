@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Document(collection = "employee")
@@ -14,23 +16,29 @@ public class Employee {
     private String id;
 
     @Field(name = "name")
+    @NotNull(message = "name cannot be null")
     private String name;
 
     @Field(name = "dob")
+    @NotNull(message = "Date of birth cannot be null")
     private Date dob;
 
     @Field(name = "doj")
+    @NotNull(message = "Date of joining cannot be null")
     private Date doj;
 
     @Field(name = "salary")
+    @NotNull(message = "Entering invalid salary")
     private double salary;
 
     @Field(name="enterpriseid")
+    @NotNull(message = "Entering enterprise id")
     private String enterpriseid;
 
 
     //add validations
     @Field(name = "employeeid")
+    @Min(value = 100001,message = "invalid value")
     private int employeeid;
 
     public Employee(String id, String name, Date dob, Date doj, double salary, String enterpriseid, int employeeid) {
