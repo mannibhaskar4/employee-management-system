@@ -5,6 +5,7 @@ import com.accenture.entity.Employee;
 import com.accenture.exception.EmployeeCollectionException;
 import com.accenture.repository.EmployeeRepository;
 import com.accenture.service.EmployeeService;
+import com.mongodb.MongoWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,9 @@ public class EmployeeController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
         }catch(EmployeeCollectionException e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }catch(MongoWriteException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+//            return new ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("April Fool's Status Code (CODE 418)\n");
         }
 
     }
