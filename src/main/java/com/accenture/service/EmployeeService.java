@@ -7,11 +7,8 @@ import com.accenture.repository.EmployeeRepository;
 import com.mongodb.MongoWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,12 +25,12 @@ public class EmployeeService implements  EmployeeServiceInterface{
     @Override
     public void createEmployee(Employee employee)throws MongoWriteException,ConstraintViolationException,EmployeeCollectionException{
 //        return employeeRepository.save(employee);
-        Optional<Employee> employeeOptional=employeeRepository.findByEmployee(employee.getName() );
+//        Optional<Employee> employeeOptional=employeeRepository.findByEmployee(employee.getName() );
         Optional<Employee> employeeOptional2=employeeRepository.findByEnterpriseid(employee.getEnterpriseid());
         Optional<Employee> employeeOptional3=employeeRepository.findByEmployeeId(employee.getEmployeeid());
-        if(employeeOptional.isPresent()||employeeOptional2.isPresent()||employeeOptional3.isPresent()){
-            if(employeeOptional.isPresent())
-                throw new EmployeeCollectionException(EmployeeCollectionException.EmployeeAlreadyExists());
+        if(/*employeeOptional.isPresent()||*/employeeOptional2.isPresent()||employeeOptional3.isPresent()){
+//            if(employeeOptional.isPresent())
+//                throw new EmployeeCollectionException(EmployeeCollectionException.EmployeeAlreadyExists());
 
             if(employeeOptional3.isPresent())
                 throw new EmployeeCollectionException(EmployeeCollectionException.EmployeeidAlreadyExists());

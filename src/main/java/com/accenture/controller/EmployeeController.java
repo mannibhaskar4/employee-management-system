@@ -15,6 +15,10 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
 
+
+//@CrossOrigin("*")
+// --- * means it can be accesed by every front end framework such as angular or react
+@CrossOrigin(origins = {"http://localhost:3000/"})
 @RestController
 @RequestMapping("api/employee")
 public class EmployeeController {
@@ -30,7 +34,8 @@ public class EmployeeController {
 //        return employeeService.createEmployee(employee);
 //    }
 
-    @PostMapping("/create")
+//    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {
 //        return employeeService.createEmployee(employee);
         try{
@@ -47,27 +52,55 @@ public class EmployeeController {
 
     }
 
-    @GetMapping("/all")
-    public List<Employee> getAllStudents(){
+//    @GetMapping("/all")
+    @GetMapping
+    public List<Employee> getAllEmployee(){
         return employeeService.getAllEmployee();
     }
 
-    @GetMapping("/studentsByName/{employeeid}")
-    public List<Employee> studentsByEmployeeid(@PathVariable int employeeid){
+    @GetMapping("/employeeByName/{employeeid}")
+    public List<Employee> employeeByEmployeeid(@PathVariable int employeeid){
         return employeeService.getEmployeeidByEmployeeid(employeeid);
     }
 
     @DeleteMapping("/delete/{employeeid}")
-    public int deleteStudentByName(@PathVariable int employeeid){
+    public int deleteEmployeeByEmployeeid(@PathVariable int employeeid){
         return   employeeService.deleteEmployeebyId(employeeid);
     }
 
 
     @PutMapping("/update")
-    public Employee updateStudent(@RequestBody Employee employee){
+    public Employee updateEmployee(@RequestBody Employee employee){
         return employeeService.updateEmployee(employee);
     }
 
+
+    @PutMapping("/update/{employeeid}")
+    public ResponseEntity<?> updateEmployeeByEmployeeId(@PathVariable int employeeid,@RequestBody Employee employee){
+        Employee updateEmployee = null;
+        try {
+            updateEmployee = employeeRepository.findByEmployeeId(employeeid)
+                    .orElseThrow(() -> new EmployeeCollectionException("Employee id "+employeeid+" does not Exist."));
+            updateEmployee.setName(employee.getName());
+            updateEmployee.setDob(employee.getDob());
+            updateEmployee.setDoj(employee.getDoj());
+            updateEmployee.setSalary(employee.getSalary());
+        } catch (EmployeeCollectionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }catch (NullPointerException e){
+            return new ResponseEntity<>("Employee id does not exsists",HttpStatus.OK);
+        }
+//
+//        updateEmployee.setName(employee.getName());
+//        updateEmployee.setDob(employee.getDob());
+//        updateEmployee.setDoj(employee.getDoj());
+//        updateEmployee.setSalary(employee.getSalary());
+
+        employeeRepository.save(updateEmployee);
+
+        return ResponseEntity.ok(updateEmployee);
+
+    }
 
 
 }
