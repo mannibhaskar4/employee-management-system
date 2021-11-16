@@ -9,6 +9,6 @@ import javax.validation.ConstraintViolationException;
 public interface EmployeeServiceInterface {
 
 
-    public void createEmployee(Employee employee) throws MongoWriteException,ConstraintViolationException,EmployeeCollectionException;
+    public Employee createEmployee(Employee employee) throws MongoWriteException,ConstraintViolationException,EmployeeCollectionException;
 
 }

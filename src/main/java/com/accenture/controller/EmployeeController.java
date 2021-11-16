@@ -39,8 +39,9 @@ public class EmployeeController {
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {
 //        return employeeService.createEmployee(employee);
         try{
-            employeeService.createEmployee(employee);
-            return  new ResponseEntity<Employee>(employee, HttpStatus.OK);
+
+            Employee emp=employeeService.createEmployee(employee);
+            return  new ResponseEntity<Employee>(emp, HttpStatus.OK);
         }catch(ConstraintViolationException e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
         }catch(EmployeeCollectionException e){

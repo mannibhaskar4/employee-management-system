@@ -23,7 +23,7 @@ public class EmployeeService implements  EmployeeServiceInterface{
 //    }
 
     @Override
-    public void createEmployee(Employee employee)throws MongoWriteException,ConstraintViolationException,EmployeeCollectionException{
+    public Employee createEmployee(Employee employee)throws MongoWriteException,ConstraintViolationException,EmployeeCollectionException{
 //        return employeeRepository.save(employee);
 //        Optional<Employee> employeeOptional=employeeRepository.findByEmployee(employee.getName() );
         Optional<Employee> employeeOptional2=employeeRepository.findByEnterpriseid(employee.getEnterpriseid());
@@ -39,8 +39,11 @@ public class EmployeeService implements  EmployeeServiceInterface{
                 throw new EmployeeCollectionException(EmployeeCollectionException.EnterpriseidAlreadyExists());
         }else{
 //            employee.set(new Date(System.currentTimeMillis()));
-            employeeRepository.save(employee);
+
+            Employee emp=employeeRepository.save(employee);
+            return emp;
         }
+        return null;
     }
 
 //    public Employee getEmployee byId(String id){
