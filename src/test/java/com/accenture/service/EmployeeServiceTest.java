@@ -11,9 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,9 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.Assert.*;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -134,14 +129,14 @@ public class EmployeeServiceTest {
         expected.add(data2);
 
         when(employeeRepository.findAll()).thenReturn(expected);
-        expected=employeeService.getAllEmployee();
+        List<Employee> added=employeeService.getAllEmployee();
         List<Employee> actual=new ArrayList<Employee>();
 
         actual=employeeRepository.findAll();
 //        System.out.println(actual.get(0).getName());
-        if((expected.size()==actual.size())){
+        if((added.size()==actual.size())){
             for(int i=0;i<expected.size();i++){
-                assertEmployee(expected.get(i),actual.get(i));
+                assertEmployee(added.get(i),actual.get(i));
             }
         }
         else
@@ -174,6 +169,76 @@ public class EmployeeServiceTest {
                 Optional.of(dataInserted2)
         );
         System.out.println(employeeRepository.findByEmployeeid(EMPLOYEE_ID).get(0).getName()+" "+employeeService.getEmployeeidByEmployeeid(EMPLOYEE_ID).get(0).getName());
+
+    }
+
+    @Test
+    public void shouldDeleteEmployeebyId() throws EmployeeCollectionException{
+        Date d1=new Date(1999,12,11);
+        Date d2=new Date(2021,12,11);
+        Employee data1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145272);
+
+        List<Employee> expected=new ArrayList<Employee>();
+
+        expected.add(data1);
+
+        when(employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID)).thenReturn(expected);
+
+        List<Employee> added=employeeService.deleteEmployeebyId(EMPLOYEE_ID);
+        List<Employee> actual=new ArrayList<Employee>();
+//
+        actual=employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID);
+        System.out.println(actual.get(0).getName());
+        if((added.size()==actual.size())){
+            for(int i=0;i<expected.size();i++){
+                assertEmployee(added.get(i),actual.get(i));
+            }
+        }
+        else
+            fail("Test fails");
+
+    }
+
+    @Test
+    public void shouldUpdateEmployee(){
+        Date d1=new Date(1999,12,11);
+        Date d2=new Date(2021,12,11);
+        Employee passing=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        when(employeeRepository.save(Mockito.any(Employee.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Employee actual=employeeRepository.save(passing);
+
+        passing.setSalary(7400000.56);
+        passing.setName("Ram");
+        actual=employeeRepository.save(passing);
+        Employee expected=employeeService.updateEmployee(passing);
+//        System.out.println(expected.getName());
+//        System.out.println(expected.getName()+" "+exp.getSalary());
+        assertEmployee(expected,actual);
+        assertEquals(expected,actual);
+
+    }
+
+    @Test
+    public void shouldUpdateEmployeeWithException(){
+        Date d1=new Date(1999,12,11);
+        Date d2=new Date(2021,12,11);
+        Employee passing=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        when(employeeRepository.save(Mockito.any(Employee.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        Employee actual=employeeRepository.save(passing);
+
+        passing.setSalary(7400000.56);
+        passing.setName("Ram");
+        passing.setEmployeeid(123489);
+        actual=employeeRepository.save(passing);
+        Employee expected=employeeService.updateEmployee(passing);
+//        System.out.println(expected.getName());
+        System.out.println(expected.getName()+" "+expected.getEmployeeid());
+        assertEmployee(expected,actual);
+        assertEquals(expected,actual);
 
     }
 
