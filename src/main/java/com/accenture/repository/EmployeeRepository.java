@@ -13,7 +13,7 @@ public interface EmployeeRepository extends MongoRepository<Employee,String> {
 
     List<Employee> findByEmployeeid(int employeeid);
 //
-    int deleteEmployeeByEmployeeid(int employeeid);
+    List<Employee> deleteEmployeeByEmployeeid(int employeeid);
 
 
 

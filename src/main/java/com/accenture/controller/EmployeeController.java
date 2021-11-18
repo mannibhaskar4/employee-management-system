@@ -65,7 +65,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{employeeid}")
-    public int deleteEmployeeByEmployeeid(@PathVariable int employeeid){
+    public List<Employee> deleteEmployeeByEmployeeid(@PathVariable int employeeid){
         return   employeeService.deleteEmployeebyId(employeeid);
     }
 

@@ -61,9 +61,9 @@ public class EmployeeService implements  EmployeeServiceInterface{
     }
 
 
-    public int deleteEmployeebyId(int deleteStudentByEmployeeid){
-        employeeRepository.deleteEmployeeByEmployeeid(deleteStudentByEmployeeid);
-        return 2;
+    public List<Employee> deleteEmployeebyId(int deleteStudentByEmployeeid){
+        return employeeRepository.deleteEmployeeByEmployeeid(deleteStudentByEmployeeid);
+//        return ;
     }
 
 
