@@ -56,14 +56,22 @@ public class EmployeeService implements  EmployeeServiceInterface{
     }
 
 
-    public List<Employee> getEmployeeidByEmployeeid(int name){
-        return employeeRepository.findByEmployeeid(name);
+    public Employee getEmployeeByEmployeeid(int name) throws EmployeeCollectionException {
+        Employee valueToBeReturned=employeeRepository.findByEmployeeid(name);
+        if(valueToBeReturned==null){
+            throw new EmployeeCollectionException(EmployeeCollectionException.NotFoundException(name));
+        }
+        return  valueToBeReturned;
     }
 
 
-    public List<Employee> deleteEmployeebyId(int deleteStudentByEmployeeid){
-        return employeeRepository.deleteEmployeeByEmployeeid(deleteStudentByEmployeeid);
-//        return ;
+    public Employee deleteEmployeebyId(int deleteStudentByEmployeeid)throws EmployeeCollectionException{
+        Employee valueToBeReturned=employeeRepository.deleteEmployeeByEmployeeid(deleteStudentByEmployeeid);
+        if(valueToBeReturned==null){
+            throw new EmployeeCollectionException(EmployeeCollectionException.NotFoundException(deleteStudentByEmployeeid));
+        }
+        return  valueToBeReturned;
+        //        return ;
     }
 
 

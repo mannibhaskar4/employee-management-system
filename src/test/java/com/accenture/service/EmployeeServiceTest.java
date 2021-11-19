@@ -49,13 +49,13 @@ public class EmployeeServiceTest {
     public void sholudCreateEmployeeTest()throws EmployeeCollectionException {
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee passing=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        Employee expected=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
 //        Employee em2 = null;
         when(employeeRepository.save(Mockito.any(Employee.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
-        Employee actual=employeeRepository.save(passing);
-        Employee expected=employeeService.createEmployee(passing);
+//        Employee actual=employeeRepository.save(passing);
+        Employee actual=employeeService.createEmployee(expected);
 //        System.out.println(expected.getName());
         assertEmployee(expected,actual);
         assertEquals(expected,actual);
@@ -66,24 +66,29 @@ public class EmployeeServiceTest {
     public void createEmployeeShouldThrowEmployeeidAlreadyExists() throws EmployeeCollectionException {
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee passing1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
-        Employee passing2=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP129",145279);
+//        Employee passing1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        Employee expected=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP129",145279);
         Optional<Employee> returned = null;
-        when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
-        Employee actual=employeeService.createEmployee(passing1);
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
+//        Employee actual=employeeService.createEmployee(passing1);
 
-        when(employeeRepository.findByEmployeeId(passing2.getEmployeeid()))
-                .thenReturn(Optional.of(passing2));
+        when(employeeRepository.findByEmployeeId(expected.getEmployeeid()))
+                .thenReturn(Optional.of(expected));
 
 
-        try {
-            Employee em=employeeService.createEmployee(passing2);
-        }catch (EmployeeCollectionException e){
-              Assertions.assertEquals("Employee with given Employee Id already exists",e.getMessage());
-//            System.out.println(e.getMessage());
-        }
+//        try {
+//            Employee actual=employeeService.createEmployee(expected);
+//        }catch (EmployeeCollectionException e){
+//              Assertions.assertEquals("Employee with given Employee Id already exists",e.getMessage());
+////            System.out.println(e.getMessage());
+//        }
 
+
+        EmployeeCollectionException exception=Assertions.assertThrows(EmployeeCollectionException.class,()->{
+            Employee actual=employeeService.createEmployee(expected);
+        });
+        assertTrue(exception.getMessage().contains("Employee with given Employee Id already exists"));
 
     }
 
@@ -92,23 +97,29 @@ public class EmployeeServiceTest {
     public void createEmployeeShouldThrowEnterpriseidAlreadyExists() throws EmployeeCollectionException {
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee passing1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
-        Employee passing2=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145277);
-        Optional<Employee> returned = null;
-        when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
-        Employee actual=employeeService.createEmployee(passing1);
+//        Employee passing1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        Employee expected=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145277);
+//        Optional<Employee> returned = null;
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
+//        Employee actual=employeeService.createEmployee(passing1);
 
-        when(employeeRepository.findByEnterpriseid(passing2.getEnterpriseid()))
-                .thenReturn(Optional.of(passing2));
+        when(employeeRepository.findByEnterpriseid(expected.getEnterpriseid()))
+                .thenReturn(Optional.of(expected));
 
 
-        try {
-            Employee em=employeeService.createEmployee(passing2);
-        }catch (EmployeeCollectionException e){
-            Assertions.assertEquals("Employee with given Enterprise Id already exists",e.getMessage());
-//            System.out.println(e.getMessage());
-        }
+//        try {
+//            Employee em=employeeService.createEmployee(passing2);
+//        }catch (EmployeeCollectionException e){
+//            Assertions.assertEquals("Employee with given Enterprise Id already exists",e.getMessage());
+////            System.out.println(e.getMessage());
+//        }
+
+
+        EmployeeCollectionException exception=Assertions.assertThrows(EmployeeCollectionException.class,()->{
+            Employee actual=employeeService.createEmployee(expected);
+        });
+        assertTrue(exception.getMessage().contains("Employee with given Enterprise Id already exists"));
 
 
     }
@@ -147,28 +158,63 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void shouldGetEmployeeidByEmployeeid() throws EmployeeCollectionException {
+    public void shouldGetEmployeeByEmployeeid() throws EmployeeCollectionException {
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee data1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
-        Employee data2=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145272);
-        Employee data3=new Employee("102","Mallik",d1,d2,52000.2,"EMZ123",145274);
-        List<Employee> expected=new ArrayList<Employee>();
-        expected.add(data1);
-        expected.add(data2);
-        expected.add(data3);
-
-        when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
-        Employee dataInserted1=employeeService.createEmployee(data1);
-        Employee dataInserted2=employeeService.createEmployee(data2);
-        Employee dataInserted3=employeeService.createEmployee(data3);
+        Employee expected=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145272);
 
 
-        when(employeeRepository.findByEmployeeId(EMPLOYEE_ID)).thenReturn(
-                Optional.of(dataInserted2)
-        );
-        System.out.println(employeeRepository.findByEmployeeid(EMPLOYEE_ID).get(0).getName()+" "+employeeService.getEmployeeidByEmployeeid(EMPLOYEE_ID).get(0).getName());
+        when(employeeRepository.findByEmployeeid(EMPLOYEE_ID)).thenReturn(expected);
+        Employee actual=employeeService.getEmployeeByEmployeeid(EMPLOYEE_ID);
+
+        assertEmployee(expected,actual);
+        assertEquals(expected,actual);
+
+
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
+//        Employee dataInserted1=employeeService.createEmployee(data1);
+//        Employee dataInserted2=employeeService.createEmployee(data2);
+//        Employee dataInserted3=employeeService.createEmployee(data3);
+//
+//
+
+//        System.out.println(employeeRepository.findByEmployeeid(EMPLOYEE_ID).get(0).getName()+" "+employeeService.getEmployeeidByEmployeeid(EMPLOYEE_ID).get(0).getName());
+
+
+
+
+    }
+
+    @Test
+    public void shouldGetByEmployeeidThrowsCustomNotFoundException() throws EmployeeCollectionException {
+        Date d1=new Date(1999,12,11);
+        Date d2=new Date(2021,12,11);
+        Employee expected=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145272);
+
+
+        when(employeeRepository.findByEmployeeid(EMPLOYEE_ID)).thenReturn(null);
+
+
+
+
+
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
+//        Employee dataInserted1=employeeService.createEmployee(data1);
+//        Employee dataInserted2=employeeService.createEmployee(data2);
+//        Employee dataInserted3=employeeService.createEmployee(data3);
+//
+//
+
+//        System.out.println(employeeRepository.findByEmployeeid(EMPLOYEE_ID).get(0).getName()+" "+employeeService.getEmployeeidByEmployeeid(EMPLOYEE_ID).get(0).getName());
+
+        EmployeeCollectionException exception=Assertions.assertThrows(EmployeeCollectionException.class,()->{
+            Employee actual=employeeService.getEmployeeByEmployeeid(EMPLOYEE_ID);
+        });
+        assertTrue(exception.getMessage().contains("Employee with "+EMPLOYEE_ID+" not found!"));
+
+
 
     }
 
@@ -176,26 +222,65 @@ public class EmployeeServiceTest {
     public void shouldDeleteEmployeebyId() throws EmployeeCollectionException{
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee data1=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145272);
+        Employee excepted=new Employee("101","Manni",d1,d2,52000.2,"EMP123",EMPLOYEE_ID);
+        when(employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID)).thenReturn(excepted);
 
-        List<Employee> expected=new ArrayList<Employee>();
+        Employee actual = employeeService.deleteEmployeebyId(EMPLOYEE_ID);
 
-        expected.add(data1);
+        assertEmployee(excepted,actual);
+        assertEquals(excepted,actual);
 
-        when(employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID)).thenReturn(expected);
 
-        List<Employee> added=employeeService.deleteEmployeebyId(EMPLOYEE_ID);
-        List<Employee> actual=new ArrayList<Employee>();
+//        List<Employee> expected=new ArrayList<Employee>();
 //
-        actual=employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID);
-        System.out.println(actual.get(0).getName());
-        if((added.size()==actual.size())){
-            for(int i=0;i<expected.size();i++){
-                assertEmployee(added.get(i),actual.get(i));
-            }
-        }
-        else
-            fail("Test fails");
+//        expected.add(data1);
+//
+//        when(employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID)).thenReturn(expected);
+//
+//        List<Employee> added=employeeService.deleteEmployeebyId(EMPLOYEE_ID);
+//        List<Employee> actual=new ArrayList<Employee>();
+////
+//        actual=employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID);
+//        System.out.println(actual.get(0).getName());
+//        if((added.size()==actual.size())){
+//            for(int i=0;i<expected.size();i++){
+//                assertEmployee(added.get(i),actual.get(i));
+//            }
+//        }
+//        else
+//            fail("Test fails");
+
+    }
+
+    @Test
+    public void shouldDeleteEmployeeidThrowsCustomNotFoundExceptionBy() throws EmployeeCollectionException {
+        Date d1=new Date(1999,12,11);
+        Date d2=new Date(2021,12,11);
+        Employee expected=new Employee("105","Bhaskar",d1,d2,52000.2,"EMP123",145272);
+
+
+        when(employeeRepository.deleteEmployeeByEmployeeid(EMPLOYEE_ID)).thenReturn(null);
+
+
+
+
+
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
+//        Employee dataInserted1=employeeService.createEmployee(data1);
+//        Employee dataInserted2=employeeService.createEmployee(data2);
+//        Employee dataInserted3=employeeService.createEmployee(data3);
+//
+//
+
+//        System.out.println(employeeRepository.findByEmployeeid(EMPLOYEE_ID).get(0).getName()+" "+employeeService.getEmployeeidByEmployeeid(EMPLOYEE_ID).get(0).getName());
+
+        EmployeeCollectionException exception=Assertions.assertThrows(EmployeeCollectionException.class,()->{
+            Employee actual=employeeService.deleteEmployeebyId(EMPLOYEE_ID);
+        });
+        assertTrue(exception.getMessage().contains("Employee with "+EMPLOYEE_ID+" not found!"));
+
+
 
     }
 
@@ -203,44 +288,20 @@ public class EmployeeServiceTest {
     public void shouldUpdateEmployee(){
         Date d1=new Date(1999,12,11);
         Date d2=new Date(2021,12,11);
-        Employee passing=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+        Employee expected=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
+//        Employee em2 = null;
         when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
+                .thenReturn(expected);
 
-        Employee actual=employeeRepository.save(passing);
-
-        passing.setSalary(7400000.56);
-        passing.setName("Ram");
-        actual=employeeRepository.save(passing);
-        Employee expected=employeeService.updateEmployee(passing);
+//        Employee actual=employeeRepository.save(passing);
+        Employee actual=employeeService.updateEmployee(expected);
 //        System.out.println(expected.getName());
-//        System.out.println(expected.getName()+" "+exp.getSalary());
         assertEmployee(expected,actual);
         assertEquals(expected,actual);
 
     }
 
-    @Test
-    public void shouldUpdateEmployeeWithException(){
-        Date d1=new Date(1999,12,11);
-        Date d2=new Date(2021,12,11);
-        Employee passing=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
-        when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
 
-        Employee actual=employeeRepository.save(passing);
-
-        passing.setSalary(7400000.56);
-        passing.setName("Ram");
-        passing.setEmployeeid(123489);
-        actual=employeeRepository.save(passing);
-        Employee expected=employeeService.updateEmployee(passing);
-//        System.out.println(expected.getName());
-        System.out.println(expected.getName()+" "+expected.getEmployeeid());
-        assertEmployee(expected,actual);
-        assertEquals(expected,actual);
-
-    }
 
     private void assertEmployee(Employee expected,Employee actual){
 //        System.out.println("test performed");

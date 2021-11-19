@@ -8,8 +8,8 @@ public class EmployeeCollectionException extends Exception{
         super(message);
     }
 
-    public static String NotFoundException(String id){
-        return "Employee with "+id+" not found!";
+    public static String NotFoundException(int employeeid){
+        return "Employee with "+employeeid+" not found!";
     }
 
     public static String EmployeeAlreadyExists(){

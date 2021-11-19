@@ -60,19 +60,37 @@ public class EmployeeController {
     }
 
     @GetMapping("/employeeByName/{employeeid}")
-    public List<Employee> employeeByEmployeeid(@PathVariable int employeeid){
-        return employeeService.getEmployeeidByEmployeeid(employeeid);
+    public ResponseEntity<?> employeeByEmployeeid(@PathVariable int employeeid){
+        try{
+            Employee employee=employeeService.getEmployeeByEmployeeid(employeeid);
+            return new ResponseEntity<Employee>(employee,HttpStatus.OK);
+        }catch (EmployeeCollectionException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }
+
     }
 
     @DeleteMapping("/delete/{employeeid}")
-    public List<Employee> deleteEmployeeByEmployeeid(@PathVariable int employeeid){
-        return   employeeService.deleteEmployeebyId(employeeid);
+    public ResponseEntity<?> deleteEmployeeByEmployeeid(@PathVariable int employeeid){
+        try{
+            Employee employee=employeeService.deleteEmployeebyId(employeeid);
+            return new ResponseEntity<Employee>(employee,HttpStatus.OK);
+        }catch (EmployeeCollectionException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }
     }
 
 
     @PutMapping("/update")
-    public Employee updateEmployee(@RequestBody Employee employee){
-        return employeeService.updateEmployee(employee);
+    public ResponseEntity<?> updateEmployee(@RequestBody Employee employee){
+        try{
+
+            Employee emp=employeeService.updateEmployee(employee);
+            return  new ResponseEntity<Employee>(emp, HttpStatus.OK);
+        }catch(ConstraintViolationException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+//        return employeeService.updateEmployee(employee);
     }
 
 

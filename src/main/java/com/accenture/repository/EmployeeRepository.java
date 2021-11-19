@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee,String> {
 
-    List<Employee> findByEmployeeid(int employeeid);
+    Employee findByEmployeeid(int employeeid);
 //
-    List<Employee> deleteEmployeeByEmployeeid(int employeeid);
+    Employee deleteEmployeeByEmployeeid(int employeeid);
 
 
 
