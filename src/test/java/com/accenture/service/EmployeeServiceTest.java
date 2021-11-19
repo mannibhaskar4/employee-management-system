@@ -51,9 +51,10 @@ public class EmployeeServiceTest {
         Date d2=new Date(2021,12,11);
         Employee expected=new Employee("101","Manni",d1,d2,52000.2,"EMP123",145279);
 //        Employee em2 = null;
+//        when(employeeRepository.save(Mockito.any(Employee.class)))
+//                .thenAnswer(i -> i.getArguments()[0]);
         when(employeeRepository.save(Mockito.any(Employee.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
-
+                .thenReturn(expected);
 //        Employee actual=employeeRepository.save(passing);
         Employee actual=employeeService.createEmployee(expected);
 //        System.out.println(expected.getName());
